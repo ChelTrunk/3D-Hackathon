@@ -5,3 +5,6 @@ var example = fucntion()
 {
 }
 
+var function1 = function() {
+    console.log("1");
+};
