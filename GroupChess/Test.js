@@ -3,13 +3,15 @@
 
 //prereq is valid move
 function updateBoard(move){
-  //void return
+    //void return
 }
 
 function isValidMove(move){
-
+    //return boolean
 }
 
+
 function causesCheck(move){
+    //return 0 for no, -1 for puts white in check, 1 for puts black in check
 
 }
