@@ -23,14 +23,18 @@
    var colorWhite =
 
    init();
-   board();
+   for(i=0;i<8;i++){
+       for(j=0;j<8;j++){
+           board(i,j);
+       }
+   }
    animate();
 
    function init() {
 
        scene = new THREE.Scene();
 
-       var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+       var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 10000 );
        scene.add( light );
 
        camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
@@ -44,7 +48,7 @@
 
        mesh = new THREE.Mesh( geometry, material );
 
-       mesh.position.x = 1000;
+       //mesh.position.x = 1000;
 
        scene.add( mesh );
 
@@ -86,7 +90,7 @@
 //
 //       }
    }
-    function board() {
+    function board(modx,modz) {
 
 //       for (i = 0, i < 8;i++) {
 //
@@ -104,13 +108,19 @@
 //
 //           }
 //       }
+
         geometryBoard = new THREE.BoxGeometry( 125, 125, 125);
-        materialBoard = new THREE.MeshStandardMaterial( { color: 0xffffff } );
 
 
+        if((modx+modz)%2!==0){
+            materialBoard = new THREE.MeshStandardMaterial( { color: 0xFFFFFF } );
+        }else{
+            materialBoard = new THREE.MeshStandardMaterial( { color: 0x000000 } );
+        }
         meshBoard = new THREE.Mesh( geometryBoard, materialBoard );
 
-        meshBoard.position.x = 100;
+        meshBoard.position.x = -437.5+125*modx;
+        meshBoard.position.z = 437.5-125*modz;
 
         scene.add( meshBoard );
 
