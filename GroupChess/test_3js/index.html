@@ -18,6 +18,9 @@
    var scene, camera, renderer;
    var geometry, material, mesh;
    var geometryBoard, materialBoard, meshBoard;
+   var quickBool, colorSwitch;
+
+   var colorWhite =
 
    init();
    for(i=0;i<8;i++){
@@ -49,36 +52,62 @@
 
        scene.add( mesh );
 
-       Knight = null;
+//       Knight = null;
 
-       var loader = new THREE.OBJLoader();
-       loader.load(
-           'objects/Knight.OBJ',
-           function ( object ) {
-               Knight = object.children[0];
-               Knight.position.x = 100;
-               Knight = new THREE.MeshStandardMaterial( { color: 0xFF33F3 });
-               scene.add( Knight );
-
-               Knight.scale.x = 125;
-               Knight.scale.y = 125;
-               Knight.scale.z = 125;
-
-               Knight.position.x = 0;
-               Knight.position.y = 130;
-               Knight.position.z = 0;
-
-
-           }
-       );
+//       var loader = new THREE.OBJLoader();
+//       loader.load(
+//           'objects/Knight.OBJ',
+//           function ( object ) {
+//               Knight = object.children[0];
+//               Knight.position.x = 100;
+//               scene.add( Knight );
+//
+//               Knight.scale.x = 300;
+//               Knight.scale.y = 300;
+//               Knight.scale.z = 300;
+//           }
+//       );
 
        renderer = new THREE.WebGLRenderer();
        renderer.setSize( window.innerWidth, window.innerHeight );
 
        document.body.appendChild( renderer.domElement );
 
+//       function board() {
+//
+//           geometryBoard = new THREE.BoxGeometry( 125, 200, 125);
+//           materialBoard = new THREE.MeshStandardMaterial( { color: 0xffffff } );
+//
+//
+//           meshBoard = new THREE.Mesh( geometryBoard, materialBoard );
+//
+//           meshBoard.position.x = 100;
+//
+//           scene.add( meshBoard );
+//
+//           console.log('hey thar');
+//
+//
+//       }
    }
     function board(modx,modz) {
+
+//       for (i = 0, i < 8;i++) {
+//
+//           for (k = 0, k < 8;i++) {
+//
+//               geometryBoard = new THREE.BoxGeometry( 125, 125, 125);
+//               materialBoard = new THREE.MeshStandardMaterial( { color: 0xffffff } );
+//
+//
+//               meshBoard = new THREE.Mesh( geometryBoard, materialBoard );
+//
+//               meshBoard.position.x = 100;
+//
+//               scene.add( meshBoard );
+//
+//           }
+//       }
 
         geometryBoard = new THREE.BoxGeometry( 125, 125, 125);
 
@@ -100,44 +129,6 @@
 
     }
 
-   function mouseEvent() {
-
-       Knight.addEventListener('mousedown', onMouseDown, false );
-
-
-   }
-
-   function onMouseDown() {
-
-       for(i=0;i<8;i++){
-           for(j=0;j<8;j++){
-               highlightBoard(i,j);
-           }
-       }
-
-
-   }
-
-   function highlightBoard(modx,modz) {
-
-       geometryBoard = new THREE.BoxGeometry( 125, 125, 125);
-
-
-       if((modx+modz)%2!==0){
-           materialBoard = new THREE.MeshStandardMaterial( { color: 0x33FFFB} );
-       }else{
-           materialBoard = new THREE.MeshStandardMaterial( { color: 0x33FFFB } );
-       }
-       meshBoard = new THREE.Mesh( geometryBoard, materialBoard );
-
-       meshBoard.position.x = -437.5+125*modx;
-       meshBoard.position.z = 437.5-125*modz;
-
-       scene.add( meshBoard );
-
-
-
-    }
    function animate() {
 
        requestAnimationFrame( animate );
