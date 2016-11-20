@@ -13,6 +13,6 @@ conn.on('open', function() {
     });
 
     // Send messages
-    var mes = prompt("Send a message?")
+    var mes = prompt("Send a message?");
     conn.send(mes);
 });
