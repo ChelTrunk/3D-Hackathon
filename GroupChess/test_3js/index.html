@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.js"></script>
@@ -11,7 +12,7 @@
     <title>Title</title>
 </head>
 <body>
-
+<div id="overlay">Testing</div>
 </body>
 <script>
    console.log('hi');
@@ -29,6 +30,22 @@
        }
    }
    animate();
+
+   function Balloon( html ) {
+       THREE.Object3D.call( this );
+
+       this.popup = document.createElement( 'div' );
+       this.popup.classList.add( 'balloon' );
+       this.popup.innerHTML = html;
+
+       this.addEventListener( 'added', (function () {
+           container.appendChild( this.popup );
+       }).bind( this ));
+
+       this.addEventListener( 'removed', (function () {
+           container,removeChild( this.popup );
+       }).bind( this ));
+   }
 
    function init() {
 
