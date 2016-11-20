@@ -1,4 +1,3 @@
-
 /*
  This program plays a chess variant with new pieces and a new ruleset which is akin to that of Counter-Strike.
  Copyright (C) 2016  Aidan Globus, Adrean Ames, Michael Trunk
@@ -242,6 +241,8 @@ function resetBoard(){
 
     importFEN()
 
+    turn = 'w';
+
     WHITE_QUEEN_CASTLE = true;
     WHITE_KING_CASTLE = true;
     BLACK_QUEEN_CASTLE = true;
@@ -265,14 +266,42 @@ function updateBoard(move){
     board[destination[0]][destination[1]]=piece;
 }
 
-//given a location, returns a two dimensional bitfield of everywhere the piece could move
+//given a loc and unit vector, generates a bitfield of squares along the ray
+function generateRay(loc, unitVector)
+{
+    //returns bitfield
+}
+
+//given a location, returns a two dimensional bitfield of everywhere the piece could legally move
 function generateMoves(loc){
     //given a move, returns true if it is valid and false otherwise. Checks for checks, out-of-bounds, and blocking
     function isValidMove(move){
         //return boolean
+
+
+
+
         function isValidSquare(loc){
-            //return boolean
+
+
         }
+    }
+
+    //adds two array element by element, clamping between 0 and 1
+    //prereq - arrays can be of any size as long as they are the same size
+    function addFields(array1, array2)
+    {
+        var newArray[[],[]];
+        for (jndex = 0; jndex<newArray[0].length; jndex++)
+        {
+            for (index = 0; index<newArray[1].length; index++)
+            {
+                var newElement = array1[jndex][index] + array2[jndex][index];
+                if (newElement >= 1) newArray[jndex][index] = 1;
+                else newArray[jndex][index] = 0;
+            }
+        }
+        return newArray;
     }
     var piece = getPieceAt(loc);
     var moves =[[],[],[],[],[],[],[],[]];
