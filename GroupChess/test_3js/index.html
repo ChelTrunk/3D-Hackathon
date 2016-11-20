@@ -20,11 +20,18 @@
 
 <div class = "game">
     <h1 id="PeerID"> Getting your PeerID</h1>
+    <input id="textbox"/>
+    <button class="button" onclick="buttonClick()">Use this username?</button>
 <script>
     //Updating PeerID
-    var element = document.getElementById("PeerID");
-    element.innerHTML = "To be added";
+    var PID = document.getElementById("PeerID");
+    PID.innerHTML = "Please set your username on the left";
+    //Button script
+    function buttonClick(){
+        var text = document.getElementById("textbox");
+        PID.innerHTML = text.value;
 
+    }
 
 
    var scene, camera, renderer;
