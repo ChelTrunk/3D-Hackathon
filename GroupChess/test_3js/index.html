@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.js"></script>
     <script src="js/OBJLoader.js"></script>
+    <script src="../ChessLogic.js"></script>
     <!--<script src="/js/three.min.js"></script>-->
     <!--<script src="./js/StereoEffect.js"></script>-->
     <!--<script src="./js/DeviceOrientationControls.js"></script>-->
@@ -18,9 +19,14 @@
 <!--<div class="overlay"></div>-->
 
 <div class = "game">
-    <h1> test</h1>
+    <h1 id="PeerID"> Getting your PeerID</h1>
 <script>
-   console.log('hi');
+    //Updating PeerID
+    var element = document.getElementById("PeerID");
+    element.innerHTML = "To be added";
+
+
+
    var scene, camera, renderer;
    var geometry, material, mesh;
    var geometryBoard, materialBoard, meshBoard;
