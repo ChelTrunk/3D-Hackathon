@@ -7,6 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.js"></script>
     <script src="js/OBJLoader.js"></script>
     <script src="../ChessLogic.js"></script>
+    <script src="../Peer.js"/>
+    <script src="http://cdn.peerjs.com/0.3/peer.min.js"></script>
     <!--<script src="/js/three.min.js"></script>-->
     <!--<script src="./js/StereoEffect.js"></script>-->
     <!--<script src="./js/DeviceOrientationControls.js"></script>-->
@@ -19,18 +21,54 @@
 <!--<div class="overlay"></div>-->
 
 <div class = "game">
-    <h1 id="PeerID"> Getting your PeerID</h1>
+    <h1 id="PeerID"> Set your username on the left</h1>
     <input id="textbox"/>
-    <button class="button" onclick="buttonClick()">Use this username?</button>
+    <button class="button" id="setID" onclick="buttonClick1()">Use this username.</button>
+    <input id="connectField"/>
+    <button class="button" id="connectID" onclick="buttonClick2()">Connect to this id.</button>
 <script>
-    //Updating PeerID
     var PID = document.getElementById("PeerID");
-    PID.innerHTML = "Please set your username on the left";
+    connectID.style.display="none";
+    connectField.style.display="none";
     //Button script
-    function buttonClick(){
+    var peer;
+    var conn;
+    function buttonClick1(){
         var text = document.getElementById("textbox");
         PID.innerHTML = text.value;
+        peer = new Peer(text.value,{key: '7rcn6hyvwddt2o6r'});
+        peer.on('open', function(id) {
+            console.log('My peer ID is: ' + id);
+        });
+        peer.on('connection', function(conn) {
+            connectID.style.display="none";
+            connectField.style.display="none";
+            console.log("connected");
+            conn.on('data', function(data) {
+                console.log(data);
+            });
+        });
+        textbox.style.display = "none";
+        setID.style.display = "none";
+        connectID.style.display="block";
+        connectField.style.display="block";
+    }
+    function buttonClick2(){
+        var peerName = connectField.value;
+        console.log(peerName);
+        conn = peer.connect(peerName);
+        conn.on('open', function() {
+            // Receive messages
+            conn.on('data', function(data) {
+                console.log('Received', data);
+            });
 
+            // Send messages
+            var mes = prompt("Send a message?");
+            conn.send(mes);
+        });
+        connectID.style.display="none";
+        connectField.style.display="none";
     }
 
 
