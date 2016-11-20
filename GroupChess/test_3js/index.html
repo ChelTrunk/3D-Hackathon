@@ -28,21 +28,6 @@
    }
    animate();
 
-   function Balloon( html ) {
-       THREE.Object3D.call( this );
-
-       this.popup = document.createElement( 'div' );
-       this.popup.classList.add( 'balloon' );
-       this.popup.innerHTML = html;
-
-       this.addEventListener( 'added', (function () {
-           container.appendChild( this.popup );
-       }).bind( this ));
-
-       this.addEventListener( 'removed', (function () {
-           container,removeChild( this.popup );
-       }).bind( this ));
-   }
 
    function init() {
 
@@ -73,18 +58,20 @@
            'objects/Knight.OBJ',
            function ( object ) {
                Knight = object.children[0];
-               Knight.position.x = 100;
                scene.add( Knight );
 
                Knight.scale.x = 100;
                Knight.scale.y = 100;
                Knight.scale.z = 100;
 
+               Knight.material.color.setHex(0xFF0000);
+
                Knight.position.x = -437.5;
                Knight.position.y = 130;
                Knight.position.z = 437.5;
            }
        );
+
 
        renderer = new THREE.WebGLRenderer();
        renderer.setSize( window.innerWidth, window.innerHeight );
