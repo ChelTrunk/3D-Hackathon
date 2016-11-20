@@ -19,7 +19,11 @@
 //move is string in form "original-new"
 //for example move = "A2-A4" would call for the A2 pawn to move up to A4
 
+
 var debug = false;
+
+var boardWidth = 8;
+var boardHeight = boardWidth;
 
 
 
@@ -37,7 +41,7 @@ var standardBoard = [["RB","NB", "BB", "QB", "KB", "BB", "NB", "RB"],
 
 var board;
 
-var turn = 'W';
+var turn = 'w';
 
 var WHITE_QUEEN_CASTLE = true;
 var WHITE_KING_CASTLE = true;
@@ -266,10 +270,86 @@ function updateBoard(move){
     board[destination[0]][destination[1]]=piece;
 }
 
-//given a loc and unit vector, generates a bitfield of squares along the ray
+//given a loc and unit vector, generates a bitfield of squares along the ray. Stops when te ray is blocked or off the board
 function generateRay(loc, unitVector)
 {
+
+    var us;
+    var them;
+
+    //creat teamFields
+    if (turn = 'w')
+    {
+        us = findTeamField('w');
+        them = findTeamField('b');
+    }
+    else
+    {
+        us = findTeamField('b');
+        them = findTeamField('w');
+    }
+
+    var rayField[[],[],[],[],[],[],[],[]];
+    //initialize them all to zero
+    for (j = 0; j<boardHeight; j++)
+    {
+        for (i = 0; i<boardWidth; i++)
+        {
+            rayField[j][i] = 0;
+        }
+    }
+
+    var currentLoc = addFields(convertNotation(loc), unitVector); //add the unit vector beforehand so we don't count the starting square
+    while (isValidSquare(currentLoc))
+    {
+        if (us[currentLoc[0]][currentLoc[1]] == 1) break; //if we hit one of our pieces, break
+        //otherwise just cast the ray
+        //rayField[][] = 1;
+        currentLoc = addFields(currentLoc, unitVector);
+
+        if (them[currentLoc[0]][currentLoc[1] == 1] break; //if we hit an enemy piece, break, but still only after we count that square
+    }
     //returns bitfield
+}
+
+//given a team, either 'b' or 'w', returns a 0-1 bitfield of the team's pieces
+function findTeamField(cTeam)
+{
+    cTeam = cTeam.toUpperCase();
+    var teamField[[],[],[],[],[],[],[],[]];
+    for (j = 0; j<boardHeight; j++)
+    {
+        for (i = 0; i<boardWidth; i++)
+        {
+            if (board[j][i].charAt(1) == cTeam) teamField[j][i] = 1;
+            else teamField[j][i] = 0;
+        }
+    }
+}
+//checks for out-of-bounds, using either notation
+function isValidSquare(loc)
+{
+    if (loc.constructor !== Array) loc = convertNotation(loc);
+    if (loc[0] < 0 && loc[0] < boardHeight) return false;
+    if (loc[1] < 0 && loc[!] < boardWidth) return false;
+    else return true;
+}
+
+//adds two array element by element, clamping between 0 and 1
+//prereq - arrays can be of any size as long as they are the same size
+function addFields(array1, array2)
+{
+    var newArray[[],[],[],[],[],[],[],[]];
+    for (jndex = 0; jndex<newArray[0].length; jndex++)
+    {
+        for (index = 0; index<newArray[1].length; index++)
+        {
+            var newElement = array1[jndex][index] + array2[jndex][index];
+            if (newElement >= 1) newArray[jndex][index] = 1;
+            else newArray[jndex][index] = 0;
+        }
+    }
+    return newArray;
 }
 
 //given a location, returns a two dimensional bitfield of everywhere the piece could legally move
@@ -281,27 +361,7 @@ function generateMoves(loc){
 
 
 
-        function isValidSquare(loc){
 
-
-        }
-    }
-
-    //adds two array element by element, clamping between 0 and 1
-    //prereq - arrays can be of any size as long as they are the same size
-    function addFields(array1, array2)
-    {
-        var newArray[[],[]];
-        for (jndex = 0; jndex<newArray[0].length; jndex++)
-        {
-            for (index = 0; index<newArray[1].length; index++)
-            {
-                var newElement = array1[jndex][index] + array2[jndex][index];
-                if (newElement >= 1) newArray[jndex][index] = 1;
-                else newArray[jndex][index] = 0;
-            }
-        }
-        return newArray;
     }
     var piece = getPieceAt(loc);
     var moves =[[],[],[],[],[],[],[],[]];
@@ -344,4 +404,13 @@ function insertString(origString, inString, index)
     string1 = origString.substring(0,index);
     string2 = origString.substring(index);
     return string1 + inString + string2;
+}
+
+function initializeNewArray(height, width, initialValue)
+{
+    var outputArray[][]; //need to fix this
+    for (j = 0; j<height; j++)
+        for (i = 0; i<width; i++)
+            outputArray[j][i] = initialValue;
+    return outputArray;
 }
