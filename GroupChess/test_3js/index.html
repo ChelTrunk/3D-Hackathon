@@ -42,7 +42,7 @@
        camera.position.y = 800;
        camera.lookAt(new THREE.Vector3(0,0,0));
 
-       geometry = new THREE.BoxGeometry( 1000, 100, 1000);
+       geometry = new THREE.BoxGeometry( 1000, 30, 1000);
        material = new THREE.MeshStandardMaterial( { color: 0xff0000 } );
 
 
@@ -109,7 +109,7 @@
 //           }
 //       }
 
-        geometryBoard = new THREE.BoxGeometry( 125, 125, 125);
+        geometryBoard = new THREE.BoxGeometry( 125, 10, 125);
 
 
         if((modx+modz)%2!==0){
@@ -118,7 +118,7 @@
             materialBoard = new THREE.MeshStandardMaterial( { color: 0x000000 } );
         }
         meshBoard = new THREE.Mesh( geometryBoard, materialBoard );
-
+        meshBoard.position.y=15;
         meshBoard.position.x = -437.5+125*modx;
         meshBoard.position.z = 437.5-125*modz;
 
