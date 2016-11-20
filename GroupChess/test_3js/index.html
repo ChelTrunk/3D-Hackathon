@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.js"></script>
+    <script src="https://threejsdoc.appspot.com/doc/three.js/src.source/core/Projector.js.html"></script>
     <script src="js/OBJLoader.js"></script>
     <script src="../ChessLogic.js"></script>
     <script src="../Peer.js"/>
@@ -138,23 +139,6 @@
    }
     function board(modx,modz) {
 
-//       for (i = 0, i < 8;i++) {
-//
-//           for (k = 0, k < 8;i++) {
-//
-//               geometryBoard = new THREE.BoxGeometry( 125, 125, 125);
-//               materialBoard = new THREE.MeshStandardMaterial( { color: 0xffffff } );
-//
-//
-//               meshBoard = new THREE.Mesh( geometryBoard, materialBoard );
-//
-//               meshBoard.position.x = 100;
-//
-//               scene.add( meshBoard );
-//
-//           }
-//
-
         geometryBoard = new THREE.BoxGeometry( 125, 20, 125);
 
 
@@ -173,9 +157,27 @@
 
         console.log('hey thar');
 
-
     }
 
+//    projector = new THREE.Projector();
+    var vectorProj = point.clone
+    mouseVector = new THREE.Vector3();
+
+    window.addEventListener( 'mousemove', onMouseMove, false);
+
+    mouseVector.x = 2 * (e.clientX / constainerWidth) - 1;
+    mouseVector.y = 1 - 2 * (e.clientY / containerHeight);
+
+    var raycaster = projector.pickingRay( mouseVector.clone(), camera);
+    var intersects = raycaster.intersectObjects( Knight );
+
+    for ( var i = 0; i < intersects.length; i++ ) {
+
+        var intersection = intersects[ i ];
+            obj = intersection.object;
+
+            obj.material.color.setRGB(1.0 - i / intersects.length, 0, 0);
+    }
    function animate() {
 
        requestAnimationFrame( animate );
