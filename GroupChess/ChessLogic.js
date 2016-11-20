@@ -315,4 +315,4 @@ function insertString(origString, inString, index)
     string1 = origString.substring(0,index);
     string2 = origString.substring(index);
     return string1 + inString + string2;
-}}
+}
