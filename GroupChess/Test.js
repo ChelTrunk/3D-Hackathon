@@ -1,6 +1,31 @@
+
+/*
+ This program plays a chess variant with new pieces and a new ruleset which is akin to that of Counter-Strike.
+ Copyright (C) 2016  Aidan Globus, Adrean Ames, Michael Trunk
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 //move is string in form "original-new"
 //for example move = "A2-A4" would call for the A2 pawn to move up to A4
-var turn = 'W';
+
+var debug = false;
+
+
+
+var FEN_ClassicStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+
 var initialBoard;
 var standardBoard = [["RB","NB", "BB", "QB", "KB", "BB", "NB", "RB"],
     ["PB","PB", "PB", "PB", "PB", "PB", "PB", "PB"],
@@ -10,35 +35,39 @@ var standardBoard = [["RB","NB", "BB", "QB", "KB", "BB", "NB", "RB"],
     ["","", "", "", "", "", "", ""],
     ["PW","PW", "PW", "PW", "PW", "PW", "PW", "PW"],
     ["RB","NW", "BW", "QW", "KW", "BW", "NW", "RW"]];
+
 var board;
+
+var turn = 'W';
 
 var WHITE_QUEEN_CASTLE = true;
 var WHITE_KING_CASTLE = true;
 var BLACK_QUEEN_CASTLE = true;
 var BLACK_KING_CASTLE = true;
 
-var l = "LB";
-var p = "PB";
-var f = "FB";
-var l = "LB";
-var u = "UB";
-var h = "HB";
-var w = "WB";
-var k = "KB";
+//variables for piece notations
+var l = "LB"; var L = "LW"; //Berolina pawn - inverted pawn; moves diagonal and captures forward
+var p = "PB"; var P = "PW"; //Classic pawn - the pawn we know and hate
+var f = "FB"; var F = "FW"; //Ferz - moves one space diagonally in any direction
+var u = "UB"; var U = "UW"; //Guard - moves and captures forward orthogonally and diagonally - powerful
+var h = "HB"; var H = "HW"; //Half pawn - moves and captures forward
+var w = "WB"; var W = "WW"; //Wazir - moves one space orthogonally
+var k = "KB"; var K = "KW"; //king - the white king will not be checkmateable
 
-var a = "AB";
-var s = "SB";
-var c = "CB";
-var d = "DB";
-var g = "GB";
-var n = "NB";
-var z = "ZB";
+var a = "AB"; var a = "AW"; //Alfil - moves two and only two spaces diagonally
+var s = "SB"; var S = "SW"; //Alibaba - moves strictly two spaces diagonally or strictly two spaces vertically
+var c = "CB"; var C = "CW"; //Camel - extended knight, moves in a (1,3) pattern
+var d = "DB"; var D = "DW"; //Dababa - moves strictly two spaces orthogonally
+var g = "GB"; var G = "GW"; //Giraffe - extended knight, moves in a (3,4) pattern
+var n = "NB"; var N = "NW"; //Knight - as long as you have a knight, never give up
+var z = "ZB"; var Z = "ZW"; //Zebra - extended knight, moves in a (2,3) pattern
 
-var b = "BB";
-var t = "TB";
-var e = "EB";
-var q = "QB";
-var r = "RB";
+var b = "BB"; var B = "BW"; //Bishop - the sniper on the board
+var t = "TB"; var T = "TW"; //Cardinal - moves like a bishop or a knight
+var e = "EB"; var E = "EW"; //Chancellor - moves likea rook or knight
+var q = "QB"; var Q = "QW"; //Queen - she is a lady
+var r = "RB"; var R = "RW"; //Rook - the king's trusty bastion
+var y = "YB"; var Y = "YW"; //Royal rook - moves like a rook or a king
 
 //prereq loc in form "A1"
 function getPieceAt(loc){
@@ -81,45 +110,142 @@ function importBoard(FEN)
     //black is lowercase, white is uppercase
 
     //first replace numbers with 1s
-    var sFENlong;
+    var sFENraw = "";
     for (i = 0; i < FEN.length; i++)
     {
-        if (!isNaN(sFEN.substring(i, i+1)))
+        if (FEN.charAt(i) == " ")
+            break;
+        if (!isNaN(parseInt(FEN.charAt(i))))
         {
-            sFENlong += replaceNumbers(parseInt(sFen.substring(i, i+1)));
+            sFENraw += replaceNumbers(parseInt(FEN.charAt(i)));
         }
         else
         {
-            sFENlong += sFEN.substring(i, i+1);
+            sFENraw += FEN.charAt(i);
         }
     }
 
-    //next just plainly convert it into a two-dimensional array. We'll replace the substrings later
+    //next just plainly convert board data into a two-dimensional array. We'll replace the substrings at the same time
+    var sFENprocessMe = sFENraw;
+    var newBoard = [[],[],[],[],[],[],[],[]];
+    var index = 0;
+    var kndex;
+    while (index<8 && sFENprocessMe.charAt(0) != " ") //increment through ranks
+    {
+        kndex = 0;
+        while (sFENprocessMe.charAt(0) != "/" && kndex<8) //increment through files
+        {
+            newBoard[index][kndex] = replaceNotation(sFENprocessMe.charAt(0));
+            sFENprocessMe = sFENprocessMe.substring(1);
+            kndex++;
+        }
+        if (sFENprocessMe.length != 0)
+        {
+            sFENprocessMe = sFENprocessMe.substring(1);
 
+        }
+        index++;
+    }
 
+    //finally apply the newBoard to the current board
+    board = newBoard;
+
+    //@debug - display the 2D board array
+    if (debug = true)
+    {
+        for (j = 0; j<8; j++)
+        {
+            for (i=0; i<8; i++)
+            {
+                console.log(newBoard[j, i]);
+                console.log(" ");
+            }
+            console.log("\n");
+        }
+    }
 
     //replaces a one-character number string with its number of the character "1"
-    var replaceNumbers = function(sNumber)
+    function replaceNumbers(sNumber)
     {
         var iNumber = parseInt(sNumber);
         var sNewNumber = "";
-        for (i = 0; i<iNumber; i++)
+        for (jndex = 0; jndex<iNumber; jndex++)
         {
             sNewNumber += "1";
         }
+        return sNewNumber;
     }
 
+    var i = 0;
+
+    //given th FEN notation, returns our notation as a string. The string variables are defined at the top of this .js
     function replaceNotation(cNotation)
     {
         switch(cNotation)
         {
+            case 'a': return a;
+            case 'b': return b;
+            case 'c': return c;
+            case 'd': return d;
+            case 'e': return e;
+            case 'f': return f;
+            case 'g': return g;
+            case 'h': return h;
 
+            case 'k': return k;
+            case 'l': return l;
+            case 'n': return n;
+
+            case 'p': return p;
+            case 'q': return q;
+            case 'r': return r;
+            case 's': return s;
+            case 't': return t;
+            case 'u': return u;
+
+            case 'w': return w;
+
+            case 'y': return y;
+            case 'z': return z;
+
+            case 'A': return A;
+            case 'B': return B;
+            case 'C': return C;
+            case 'D': return D;
+            case 'E': return E;
+            case 'F': return F;
+            case 'G': return G;
+            case 'H': return H;
+
+            case 'K': return K;
+            case 'L': return L;
+            case 'N': return N;
+
+            case 'P': return P;
+            case 'Q': return Q;
+            case 'R': return R;
+            case 'S': return S;
+            case 'T': return T;
+            case 'U': return U;
+
+            case 'W': return W;
+
+            case 'Y': return Y;
+            case 'Z': return Z;
+            default: return "";
         }
     }
 }
 
 //resets castling rules, puts all pieces in starting position
 function resetBoard(){
+
+    importFEN()
+
+    WHITE_QUEEN_CASTLE = true;
+    WHITE_KING_CASTLE = true;
+    BLACK_QUEEN_CASTLE = true;
+    BLACK_KING_CASTLE = true;
 
 }
 
@@ -152,7 +278,7 @@ function generateMoves(loc){
     var moves =[[],[],[],[],[],[],[],[]];
     for(i=0;i<8;i++){
         for(j=0;j<8;j++){
-            var move = loc+"-"+String.fromCharCode(j+65)+(8-i)
+            var move = loc+"-"+String.fromCharCode(j+65)+(8-i);
             if(isValid(move)){
                 moves[i][j]=true;
             }else{
@@ -189,4 +315,4 @@ function insertString(origString, inString, index)
     string1 = origString.substring(0,index);
     string2 = origString.substring(index);
     return string1 + inString + string2;
-}
+}}
