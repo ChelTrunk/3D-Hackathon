@@ -289,7 +289,7 @@ function generateRay(loc, unitVector)
         them = findTeamField('w');
     }
 
-    var rayField[[],[],[],[],[],[],[],[]];
+    var rayField=[[],[],[],[],[],[],[],[]];
     //initialize them all to zero
     for (j = 0; j<boardHeight; j++)
     {
@@ -307,7 +307,7 @@ function generateRay(loc, unitVector)
         //rayField[][] = 1;
         currentLoc = addFields(currentLoc, unitVector);
 
-        if (them[currentLoc[0]][currentLoc[1] == 1] break; //if we hit an enemy piece, break, but still only after we count that square
+        if (them[currentLoc[0]][currentLoc[1] == 1]) break; //if we hit an enemy piece, break, but still only after we count that square
     }
     //returns bitfield
 }
@@ -316,7 +316,7 @@ function generateRay(loc, unitVector)
 function findTeamField(cTeam)
 {
     cTeam = cTeam.toUpperCase();
-    var teamField[[],[],[],[],[],[],[],[]];
+    var teamField=[[],[],[],[],[],[],[],[]];
     for (j = 0; j<boardHeight; j++)
     {
         for (i = 0; i<boardWidth; i++)
@@ -331,7 +331,7 @@ function isValidSquare(loc)
 {
     if (loc.constructor !== Array) loc = convertNotation(loc);
     if (loc[0] < 0 && loc[0] < boardHeight) return false;
-    if (loc[1] < 0 && loc[!] < boardWidth) return false;
+    if (loc[1] < 0 && loc[1] < boardWidth) return false;
     else return true;
 }
 
@@ -339,7 +339,7 @@ function isValidSquare(loc)
 //prereq - arrays can be of any size as long as they are the same size
 function addFields(array1, array2)
 {
-    var newArray[[],[],[],[],[],[],[],[]];
+    var newArray=[[],[],[],[],[],[],[],[]];
     for (jndex = 0; jndex<newArray[0].length; jndex++)
     {
         for (index = 0; index<newArray[1].length; index++)
@@ -408,7 +408,7 @@ function insertString(origString, inString, index)
 
 function initializeNewArray(height, width, initialValue)
 {
-    var outputArray[][]; //need to fix this
+    var outputArray=[[],[],[],[],[],[],[],[]]; //need to fix this
     for (j = 0; j<height; j++)
         for (i = 0; i<width; i++)
             outputArray[j][i] = initialValue;
